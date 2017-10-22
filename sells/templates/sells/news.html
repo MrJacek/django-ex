@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{# Load CSS and JavaScript #}
+
+{% block title %}Allegro Sells{% endblock %}
+{% block content %}
+
+    <h2>Sells from allegro</h2>
+
+    <!-- Small modal -->
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        {% for login,order in zamowienia.items %}
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+
+                        <button data-clipboard-target="#copy{{ login }}" class="btn btn-default">Copy</button>
+
+                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ login }}" aria-expanded="false" aria-controls="collapse{{ login }}">
+                        <span class="label label-info">{{ order.0 }}
+                            </span>
+                        </a>
+
+                        <input readonly style="width: 0"  id="copy{{ login }}" type="text" value="{{ order| join:";" }}"
+                                   aria-describedby="basic-addon1" >
+                    </h4>
+                </div>
+
+                <div id="collapse{{ login }}" class="panel-collapse collapse in" role="tabpanel"
+                     aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        <input readonly style="width: 100%" type="text" value="{{ order| join:";" }}" aria-describedby="basic-addon1" >
+
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+{% endblock %}

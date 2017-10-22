@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{# Load CSS and JavaScript #}
+
+{% block title %}Allegro Sells{% endblock %}
+{% block content %}
+    <div class="btn-group" type="submit" role="group" aria-label="...">
+
+        {#        <button type="button" type="submit" value="check" name="checkbutton" class="btn btn-default">#}
+        <a href="{% url 'news' %}">Check Allegro</a>
+        {#        </button>#}
+    </div>
+    <!-- Small modal -->
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        {% for allegro_id,order in zamowienia.items %}
+            <div class="panel panel-default">
+
+                <div class="panel-heading" role="tab" id="headingOne">
+
+                    <h4 class="panel-title">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <button data-clipboard-target="#copy{{ allegro_id }}" class="btn btn-default">Copy
+                                </button>
+                                <input readonly style="width: 0" id="copy{{ allegro_id }}" type="text"
+                                       value="{{ order.excel| join:";" }}"
+                                       aria-describedby="basic-addon1">
+
+
+                                <span class="label label-default">{{ order.object.sells.kontrachent.name }} {{ order.object.sells.kontrachent.surename }}
+                            </span>
+
+                                <span class="label label-info">{{ order.object.sells.shipment_describe }}</span>
+                                <span class="label label-primary">{{ order.object.sells.dealDate }}</span>
+                                {% if  order.object.sells.payment_date %}
+                                    <span class="label label-success">{{ order.object.sells.payment_date }}</span>
+                                {% else %}
+                                    <span class="label label-warning">Brak zapłaty</span>
+                                {% endif %}
+
+
+                            </div>
+                            <div class="col-md-2" align="right">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                    Akcja<span class="caret"></span>
+                                </button>
+
+                                <ul class="dropdown-menu">
+                                    {% for st in order.object.sells.avalible_states %}
+                                    <li><a href="#">{{ st }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                                <a class="btn btn-default" role="button" data-toggle="collapse" data-parent="#accordion"
+                                   href="#collapse{{ allegro_id }}" aria-expanded="false"
+                                   aria-controls="collapse{{ allegro_id }}">
+                                    <span class="glyphicon glyphicon-menu-down" aria-hidden="true"/>
+                                </a>
+
+                            </div>
+                        </div>
+                        <div>
+
+                            {% for item in order.object.items %}
+                                <span class="label">
+                                <span class="label label-info">{{ item.auctions.title }}</span>
+                                <span class="label label-info">{{ item.count }}</span>
+                            </span>
+
+                            {% endfor %}
+                        </div>
+                    </h4>
+
+                </div>
+
+                <div id="collapse{{ allegro_id }}" class="panel-collapse collapse" role="tabpanel"
+                     aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        <input readonly style="width: 100%" type="text" value="{{ order.excel| join:";" }}"
+                               aria-describedby="basic-addon1">
+
+                    </div>
+                </div>
+            </div>{% endfor %}
+    </div>
+{% endblock %}
